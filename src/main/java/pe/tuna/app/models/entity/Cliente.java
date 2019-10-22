@@ -1,6 +1,11 @@
 package pe.tuna.app.models.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,12 +16,22 @@ public class Cliente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Requerido: Si deseamos que los campos String no sean nulos debemos de usar la etiqueta @NotEmpty
+    @NotEmpty
     private String nombre;
+
+    @NotEmpty
     private String apellido;
+
+    @NotEmpty
+    @Email
     private String email;
 
+    // Las clases distintas de String usamos la anotacion @NotNull
+    @NotNull
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createAt;
 
     public Long getId() {
@@ -65,8 +80,4 @@ public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @PrePersist
-    public void prePersist(){
-        createAt = new Date();
-    }
 }
