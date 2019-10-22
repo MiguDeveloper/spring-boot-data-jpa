@@ -1,0 +1,2 @@
+INSERT INTO clientes(id, nombre, apellido, email, create_at) VALUES (1,'Miguel', 'Chinchay', 'miguel@tuna.pe', '2019-10-21');
+INSERT INTO clientes(id, nombre, apellido, email, create_at) VALUES (2,'Jhon', 'Doe', 'jhon@tuna.pe', '2019-10-20');
