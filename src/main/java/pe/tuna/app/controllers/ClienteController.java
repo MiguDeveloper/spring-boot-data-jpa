@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.tuna.app.models.entity.Cliente;
 import pe.tuna.app.models.services.IClienteService;
 
@@ -36,23 +37,30 @@ public class ClienteController {
     }
 
     @PostMapping("/form")
-    public String guardar(@Valid Cliente cliente, BindingResult result, Model model) {
+    public String guardar(@Valid Cliente cliente, BindingResult result, RedirectAttributes flash, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("titulo", "Formulario de cliente");
             return "form";
         }
 
+        String mensajeflash = cliente.getId() != null ? "Cliente editado correctamente" : "Cliente creado con exito";
         clienteService.save(cliente);
+        flash.addFlashAttribute("success", mensajeflash);
 
         return "redirect:listar";
     }
 
     @GetMapping("/form/{id}")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable Long id, RedirectAttributes flash, Model model) {
         Cliente cliente = null;
         if (id > 0) {
             cliente = clienteService.findOne(id);
+            if (cliente == null){
+                flash.addFlashAttribute("danger", "El cliente no existe");
+                return "redirect:/listar";
+            }
         } else {
+            flash.addFlashAttribute("danger","El ID no puede ser cero");
             return "redirect:/listar";
         }
 
@@ -63,10 +71,12 @@ public class ClienteController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
+    public String eliminar(@PathVariable Long id, RedirectAttributes flash) {
         if (id > 0) {
             clienteService.delete(id);
+            flash.addFlashAttribute("success", "Cliente eliminado con exito");
         }
+
 
         return "redirect:/listar";
     }
