@@ -1,11 +1,9 @@
 package pe.tuna.app.models.dao;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import pe.tuna.app.models.entity.Cliente;
 
-import java.util.List;
 
-public interface IClienteDao {
-    public List<Cliente> findAll();
-    public void save(Cliente cliente);
-    public Cliente findOne(Long id);
+public interface IClienteDao extends JpaRepository<Cliente, Long> {
+
 }

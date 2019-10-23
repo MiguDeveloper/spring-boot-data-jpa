@@ -11,7 +11,8 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">TUNA.PE</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -42,6 +43,7 @@
             <th>email</th>
             <th>fecha</th>
             <th>Editar</th>
+            <th>Eliminar</th>
         </tr>
         </thead>
         <tbody>
@@ -52,6 +54,7 @@
             <td th:text="${cliente.email}"></td>
             <td th:text="${cliente.createAt}"></td>
             <td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${cliente.id}">Editar</a></td>
+            <td><a class="btn btn-danger btn-xs" th:href="@{/eliminar/} + ${cliente.id}">Eliminar</a></td>
         </tr>
         </tbody>
     </table>

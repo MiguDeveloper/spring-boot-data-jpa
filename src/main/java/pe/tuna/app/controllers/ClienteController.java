@@ -1,15 +1,14 @@
 package pe.tuna.app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import pe.tuna.app.models.dao.IClienteDao;
 import pe.tuna.app.models.entity.Cliente;
+import pe.tuna.app.models.services.IClienteService;
 
 import javax.validation.Valid;
 
@@ -17,13 +16,12 @@ import javax.validation.Valid;
 public class ClienteController {
 
     @Autowired
-    @Qualifier("clienteDaoJPA")
-    private IClienteDao clienteDao;
+    private IClienteService clienteService;
 
     @GetMapping("/listar")
     public String listar(Model model) {
         model.addAttribute("titulo", "Listado de clientes");
-        model.addAttribute("clientes", clienteDao.findAll());
+        model.addAttribute("clientes", clienteService.findAll());
 
         return "listar";
     }
@@ -44,7 +42,7 @@ public class ClienteController {
             return "form";
         }
 
-        clienteDao.save(cliente);
+        clienteService.save(cliente);
 
         return "redirect:listar";
     }
@@ -53,7 +51,7 @@ public class ClienteController {
     public String edit(@PathVariable Long id, Model model) {
         Cliente cliente = null;
         if (id > 0) {
-            cliente = clienteDao.findOne(id);
+            cliente = clienteService.findOne(id);
         } else {
             return "redirect:/listar";
         }
@@ -62,5 +60,14 @@ public class ClienteController {
         model.addAttribute("cliente", cliente);
 
         return "form";
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id) {
+        if (id > 0) {
+            clienteService.delete(id);
+        }
+
+        return "redirect:/listar";
     }
 }
