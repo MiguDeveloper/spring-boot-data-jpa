@@ -21,6 +21,7 @@
 
             <form th:action="@{/form}" th:object="${cliente}" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" th:field="*{foto}"/>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">NOMBRE</label>
                     <div class="col-sm-6">
