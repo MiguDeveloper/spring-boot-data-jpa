@@ -6,7 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.tuna.app.models.dao.IClienteDao;
+import pe.tuna.app.models.dao.IFacturaDao;
+import pe.tuna.app.models.dao.IProductoDao;
 import pe.tuna.app.models.entity.Cliente;
+import pe.tuna.app.models.entity.Factura;
+import pe.tuna.app.models.entity.Producto;
 
 import java.util.List;
 
@@ -16,6 +20,11 @@ public class ClienteServiceImpl implements IClienteService {
     @Autowired
     private IClienteDao clienteDao;
 
+    @Autowired
+    private IProductoDao productoDao;
+
+    @Autowired
+    private IFacturaDao facturaDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -45,5 +54,23 @@ public class ClienteServiceImpl implements IClienteService {
     @Transactional
     public void delete(Long id) {
         clienteDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> findProductoByNombre(String term) {
+        return productoDao.findByNombreLikeIgnoreCase("%" + term + "%");
+    }
+
+    @Override
+    @Transactional
+    public void saveFactura(Factura factura) {
+        facturaDao.save(factura);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Producto findProductoById(Long id) {
+        return productoDao.findById(id).orElse(null);
     }
 }

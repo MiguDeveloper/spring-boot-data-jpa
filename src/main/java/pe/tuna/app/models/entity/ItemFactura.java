@@ -27,6 +27,14 @@ public class ItemFactura implements Serializable {
         this.id = id;
     }
 
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
     public Integer getCantidad() {
         return cantidad;
     }
