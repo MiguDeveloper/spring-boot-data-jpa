@@ -57,7 +57,9 @@ public class ClienteController {
 
     @GetMapping("/ver/{id}")
     public String ver(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
-        Cliente cliente = clienteService.findOne(id);
+        // Para que cuando haga la carga de cliente con facturas evitar muchas consultas y realizar solo una
+        // ya no usamos la carga peresoza sino una sola consulta y ya no 'findOneid()'
+        Cliente cliente = clienteService.fetchByIdWithFacturas(id);//clienteService.findOne(id);
         if (cliente == null) {
             flash.addFlashAttribute("danger", "El cliente no existe en la base de datos");
             return "redirect:/listar";
