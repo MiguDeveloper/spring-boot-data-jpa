@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://thymeleaf.org">
+<html lang="es" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <div class="card-header" th:text="${titulo}"></div>
         <div class="card-body">
             <h4 class="card-title">
-                <a class="btn btn-success btn-xs" th:href="@{/factura/form/} + ${cliente.id}">Crear factura</a>
+                <a  sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-success btn-xs" th:href="@{/factura/form/} + ${cliente.id}">Crear factura</a>
             </h4>
 
             <img th:if="${#strings.length(cliente.foto) > 0}" class="img-thumbnail rounded float-left"
@@ -37,8 +37,8 @@
                     <th>Descripcion</th>
                     <th>Fecha</th>
                     <th>Total</th>
-                    <th>Ver</th>
-                    <th>Eliminar</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Ver</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,8 +47,8 @@
                     <td th:text="${factura.descripcion}"></td>
                     <td th:text="${factura.createAt}"></td>
                     <td th:text="${factura.getTotal()}"></td>
-                    <td><a class="btn btn-primary btn-xs" th:href="@{'/factura/ver/' + ${factura.id}}">Detalle</a></td>
-                    <td><a class="btn btn-danger btn-xs" th:href="@{'/factura/eliminar/' + ${factura.id}}" onclick="return confirm('Seguro de eliminar factura?');">Eliminar</a></td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-primary btn-xs" th:href="@{'/factura/ver/' + ${factura.id}}">Detalle</a></td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger btn-xs" th:href="@{'/factura/eliminar/' + ${factura.id}}" onclick="return confirm('Seguro de eliminar factura?');">Eliminar</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://thymeleaf.org">
+<html lang="es" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head th:fragment="head">
         <meta charset="UTF-8">
         <title th:text="${'SIS::' + titulo}"></title>
@@ -25,6 +25,23 @@
                             <a class="nav-link" th:href="@{/listar}">Listar</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav navbar-right">
+                        <li sec:authorize="!isAuthenticated()">
+                            <a class="btn btn-outline-primary" th:href="@{/login}">Sign In</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="dropdown">
+                            <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span sec:authentication="name"></span>
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <form id="logoutForm" th:action="@{/logout}" method="post">
+                                    <button onclick="document.getElementById('logoutForm').submit();" type="submit" class="dropdown-item">Sign Out</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <div class="alert alert-success" th:if="${success != null}" th:text="${success}"></div>
@@ -38,7 +55,15 @@
         </div>
 
         <footer th:fragment="footer" class="container">
-            <p class="text-center">© 2019 Copyright: <a href="https://tuna.pe">Miguel Chinchay</a></p>
+            <p class="text-center">© 2019 Copyright:
+                <a href="https://tuna.pe">Miguel Chinchay</a>
+            </p>
+            <p sec:authorize="isAuthenticated()">
+                Usuario:
+                <span sec:authentication="name"></span>
+                | Roles:
+                <span sec:authentication="principal.authorities"></span>
+            </p>
             <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
             <script th:src="@{/js/popper.min.js}"></script>
             <script th:src="@{/js/bootstrap.min.js}"></script>
