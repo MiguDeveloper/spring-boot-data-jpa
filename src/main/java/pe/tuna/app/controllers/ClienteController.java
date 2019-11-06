@@ -10,7 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +29,11 @@ import pe.tuna.app.models.services.IClienteService;
 import pe.tuna.app.models.services.IUploadFileService;
 import pe.tuna.app.util.paginator.PageRender;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 
 @Controller
 public class ClienteController {
@@ -73,18 +79,45 @@ public class ClienteController {
     }
 
     @GetMapping({"/listar", "/"})
-    public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, Authentication authentication) {
+    public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+                         Authentication authentication,
+                         HttpServletRequest request) {
 
         // Solo para pruebas
-        if (authentication != null){
+        if (authentication != null) {
             logger.info("[DEBUG MIGUEL] Usuario autenticado: ".concat(authentication.getName()));
         }
 
+        // Tres Formas de obtener el rol en el controlador
+
         // Solo para pruebas: otra forma de obtener el authentication
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
+        if (auth != null) {
             logger.info("[DEBUG MIGUEL] Forma estatica SecurityContextHolder, Usuario autenticado: ".concat(auth.getName()));
         }
+
+        // 1ra Forma: manual programando una funcion
+        if (hasRole("ROLE_ADMIN")) {
+            logger.info("Hola ".concat(auth.getName()).concat(" tienes acceso!"));
+        } else {
+            logger.info("Hola ".concat(auth.getName()).concat(" no tienes acceso"));
+        }
+
+        // 2da forma: usando el requestWrapper servletReauest request
+        SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+        if (securityContext.isUserInRole("ADMIN")){
+            logger.info("Usando Wrapper: Hola ".concat(auth.getName()).concat(" tienes acceso"));
+        }else{
+            logger.info("Usando Wrapper: Hola ".concat(auth.getName()).concat(" no tienes acceso"));
+        }
+
+        // 3ra forma: nativa usando solo el request
+        if(request.isUserInRole("ROLE_ADMIN")){
+            logger.info("Usando request nativo: Hola ".concat(auth.getName()).concat(" tienes acceso"));
+        }else{
+            logger.info("Usando request nativo: Hola ".concat(auth.getName()).concat(" no tienes acceso"));
+        }
+
 
         Pageable pageRequest = PageRequest.of(page, 4); // recordar que esto es con springboot 2
         // ya que en spring boot 1 se usa: new PageRequest
@@ -193,5 +226,34 @@ public class ClienteController {
         return "redirect:/listar";
     }
 
+    private boolean hasRole(String role) {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        if (context == null) {
+            return false;
+        }
+
+        Authentication auth = context.getAuthentication();
+
+        if (auth == null) {
+            return false;
+        }
+
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+
+        return authorities.contains(new SimpleGrantedAuthority(role));
+
+        /*
+        for (GrantedAuthority authority :
+                authorities) {
+            if (role.equals(authority.getAuthority())) {
+                logger.info("Hola usuario: ".concat(auth.getName()).concat(" tu rol es ".concat(authority.getAuthority())));
+                return true;
+            }
+        }
+
+        return false;
+         */
+    }
 
 }

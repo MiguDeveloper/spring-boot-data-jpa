@@ -2,7 +2,9 @@ package pe.tuna.app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,6 +27,12 @@ public class MvcConfig implements WebMvcConfigurer {
         // ahora manejamos una carpeta dentro del proyecto
     }
      */
+
+    // Es importante que cuando este metodo este en una clase de configuracion
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     // Registramos un controlador de vistas: viewController, Ojo el metodo tiene que llamarse igual
     public void addViewControllers(ViewControllerRegistry registry){
