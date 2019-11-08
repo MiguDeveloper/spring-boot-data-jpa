@@ -3,6 +3,7 @@ package pe.tuna.app.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Locale;
 
 @Controller
 public class ClienteController {
@@ -43,6 +45,10 @@ public class ClienteController {
 
     @Autowired
     private IUploadFileService uploadFileService;
+
+    // Para usar el multi idioma inyectamos el message source
+    @Autowired
+    private MessageSource messageSource;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private static final String UPLOADS_FOLDER = "uploads";
@@ -81,7 +87,8 @@ public class ClienteController {
     @GetMapping({"/listar", "/"})
     public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
                          Authentication authentication,
-                         HttpServletRequest request) {
+                         HttpServletRequest request,
+                         Locale locale) {
 
         // Solo para pruebas
         if (authentication != null) {
@@ -126,7 +133,7 @@ public class ClienteController {
 
         PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
 
-        model.addAttribute("titulo", "Listado de clientes");
+        model.addAttribute("titulo", messageSource.getMessage("text.cliente.listar.titulo", null, locale));
         model.addAttribute("clientes", clientes);
         model.addAttribute("page", pageRender);
 

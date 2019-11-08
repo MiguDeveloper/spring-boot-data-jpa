@@ -18,7 +18,7 @@ public class Usuario implements Serializable {
     @Column(length = 60)
     private String password;
 
-    private int enable;
+    private boolean enable;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -50,11 +50,11 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public int getEnable() {
+    public boolean getEnable() {
         return enable;
     }
 
-    public void setEnable(int enable) {
+    public void setEnable(boolean enable) {
         this.enable = enable;
     }
 
