@@ -12,9 +12,10 @@
         <div class="card-header" th:text="${titulo}">
         </div>
         <div class="card-body">
-            <p>
+            <h4>
                 <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs" th:href="@{/form}">Crear cliente</a>
-            </p>
+                <a class="btn btn-success btn-xs float-right" th:href="@{'/listar'(format=csv)}">CSV</a>
+            </h4>
 
             <table class="table table-striped">
                 <thead>
