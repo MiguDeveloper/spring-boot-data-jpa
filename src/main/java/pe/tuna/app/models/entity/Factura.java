@@ -1,7 +1,11 @@
 package pe.tuna.app.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,9 +25,13 @@ public class Factura implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "create_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createAt;
 
+    // JsonBackReference: es la contrapartida a JsonManageReference. con el back estamos diciendo que no serialize
+    // esta propiedad
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Cliente cliente;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -73,6 +81,7 @@ public class Factura implements Serializable {
         this.createAt = createAt;
     }
 
+    @XmlTransient // anotamos el metodo ya que queremos cuando se serialize no llame a este metodo
     public Cliente getCliente() {
         return cliente;
     }

@@ -19,22 +19,21 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.tuna.app.models.entity.Cliente;
 import pe.tuna.app.models.services.IClienteService;
 import pe.tuna.app.models.services.IUploadFileService;
 import pe.tuna.app.util.paginator.PageRender;
+import pe.tuna.app.view.xml.ClienteList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -82,6 +81,12 @@ public class ClienteController {
         model.addAttribute("titulo", "cliente:" + cliente.getApellido());
 
         return "ver";
+    }
+
+    @GetMapping("listar-rest")
+    @ResponseBody
+    public ClienteList listarRest(){
+        return new ClienteList(clienteService.findAll());
     }
 
     @GetMapping({"/listar", "/"})

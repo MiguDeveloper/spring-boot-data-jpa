@@ -1,5 +1,7 @@
 package pe.tuna.app.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -34,9 +36,13 @@ public class Cliente implements Serializable {
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
+    // JsonManagedReference: es la lista que queremos serializar. Para evitar los loops tenemos que especificar
+    // la relacion en un solo sentido, tbm tenemos que anotar en la otra clase para que funcione
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Factura> facturas;
 
     public Cliente() {

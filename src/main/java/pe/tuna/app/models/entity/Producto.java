@@ -1,5 +1,7 @@
 package pe.tuna.app.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,6 +19,7 @@ public class Producto implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "create_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createAt;
 
     @PrePersist
